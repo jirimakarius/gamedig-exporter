@@ -6,6 +6,10 @@ const client = require('prom-client');
 const register = client.register;
 const Gamedig = require('gamedig');
 
+const up = new client.Gauge({
+	name: 'gamedig_up',
+	help: 'Gameserver running',
+});
 const maxplayers = new client.Gauge({
 	name: 'gamedig_max_players',
 	help: 'Max players',
@@ -27,15 +31,20 @@ async function collectGamedigData() {
 	const host = process.env.GAME_HOST || 'localhost';
 	const port = process.env.GAME_PORT || null;
 
-	const data = await Gamedig.query({ type: game_type, host, port });
+	try {
+		const data = await Gamedig.query({ type: game_type, host, port });
 
-	const labels = Object.assign(
-		{ server_name: data.name, map: data.map },
-		collectGamedigRawData(game_type, data),
-	);
-	maxplayers.set(labels, data.maxplayers);
-	players.set(labels, data.players.length);
-	ping.set(labels, data.ping);
+		const labels = Object.assign(
+			{ server_name: data.name, map: data.map },
+			collectGamedigRawData(game_type, data),
+		);
+		up.set(1);
+		maxplayers.set(labels, data.maxplayers);
+		players.set(labels, data.players.length);
+		ping.set(labels, data.ping);
+	} catch (ex) {
+		up.set(0);
+	}
 }
 
 function collectGamedigRawData(game_type, data) {
