@@ -1,0 +1,44 @@
+{
+  "name": "gamedig-exporter",
+  "version": "1.0.0",
+  "main": "src/main.js",
+  "repository": "https://github.com/jirimakarius/gamedig-exporter.git",
+  "author": "Jiří Makarius <jiri.makarius.0@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "gamedig": "^3.0.8",
+    "prom-client": "^14.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.7",
+    "prettier": "^2.5.1"
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix",
+    "*.{ts,md,json,yml}": "prettier --write"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "useTabs": true,
+    "arrowParens": "avoid",
+    "trailingComma": "all"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
